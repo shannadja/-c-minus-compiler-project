@@ -1,0 +1,8 @@
+void fuction(int a,int b){
+int num;
+num=a+b; /* comment*/
+
+return num;
+
+}
+

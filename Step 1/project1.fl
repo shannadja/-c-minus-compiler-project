@@ -1,0 +1,225 @@
+%option noyywrap
+%{
+	
+#include <stdio.h>
+#include <string.h>						
+#include "tokens.h"
+
+
+int tokenline = 1;
+char filename[100];
+void PRINTTOKEN(int, int);					
+void tokenprocess(int, int);
+
+	
+%}
+
+
+ID     {Letter}({Letter}|{Dig}|"_")*
+NUM    {Dig}{Dig}*
+Letter [A-Za-z]							
+Dig    [0-9]
+W	[ \t\n]
+
+
+%%
+"if"            { tokenprocess( IF, tokenline );    }
+"else"		{ tokenprocess( ELSE, tokenline );  }
+"int"		{ tokenprocess( INT, tokenline );   }
+"char"          { tokenprocess( CHAR, tokenline );   }
+"return" 	{ tokenprocess( RETURN, tokenline );}
+"void"		{ tokenprocess( VOID, tokenline );  }
+"while"         { tokenprocess( WHILE, tokenline ); }
+"+"		{ tokenprocess( PLUS, tokenline ); }
+"-"		{ tokenprocess( MINUS, tokenline ); }
+"*"		{ tokenprocess( TIMES, tokenline ); }
+"/"		{ tokenprocess( DIVIDE, tokenline );}
+">"		{ tokenprocess( GREAT, tokenline ); }
+">="		{ tokenprocess( GREATEQ, tokenline );}
+"<"		{ tokenprocess( SMALL, tokenline ); }
+"<="		{ tokenprocess( SMALLEQ, tokenline ); }
+"=="		{ tokenprocess( EQUALITY, tokenline); }						
+"!="		{ tokenprocess( NOTEQ, tokenline );  }
+"="		{ tokenprocess( EQUAL, tokenline );  }
+";"		{ tokenprocess( QUESTMARK, tokenline ); }
+","		{ tokenprocess( COMMA, tokenline );  }
+"("		{ tokenprocess( LEFTPAR, tokenline ); }
+")"		{ tokenprocess( RIGHTPAR, tokenline );}
+"["		{ tokenprocess( LBRAC, tokenline );  }
+"]"		{ tokenprocess( RBRAC, tokenline );  }
+"{"		{ tokenprocess( LCURLY, tokenline ); }
+"}"		{ tokenprocess( RCURLY, tokenline );}
+"/*"		{ tokenprocess( LCOMM, tokenline );  }
+"*/"		{ tokenprocess( RCOMM, tokenline ); }
+
+{ID}		{ tokenprocess( T_ID, tokenline );  }
+{NUM}		{tokenprocess( T_NUM, tokenline ); }
+
+ "/*"(.|\n)*"*/"		{tokenprocess( T_Comment, tokenline );} 
+
+\n		{ ++tokenline; }
+%%
+
+
+int main(int argc, char *argv[])
+ {
+	strcpy(filename, argv[1]);
+        if (argc == 2)
+                yyin = fopen(argv[1], "r");
+        else 
+        {
+                printf("No files - Exit\n");
+                exit(1);
+        }
+	
+        yylex();
+}
+
+void PRINTTOKEN(int tok, int n) 
+{
+        switch(tok) 
+        {
+                case IF : 
+                
+			printf("\nFound an IF on line %d of file \"%s\".\n", tokenline, filename);
+                	break;
+                	
+		case ELSE:
+			printf("\nFound an ELSE on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case INT:
+			printf("\nFound an INT on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case RETURN:
+			printf("\nFound a RETURN on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case VOID:
+			printf("\nFound a VOID on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case WHILE:
+			printf("\nFound a WHILE on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case PLUS:
+			printf("\nFound a \"+\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case MINUS:
+			printf("\nFound a \"-\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case TIMES:
+			printf("\nFound a \"*\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case DIVIDE:
+			printf("\nFound a \"/\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+					
+		case GREAT:
+			printf("\nFound a \">\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case GREATEQ:
+			printf("\nFound a \">=\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case SMALL:
+			printf("\nFound a \"<\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case SMALLEQ:
+			printf("\nFound a \"<=\" on line %d of file \"%s\".\n",tokenline, filename);
+			break;
+			
+		case EQUALITY:
+			printf("\nFound a \"==\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case NOTEQ:
+			printf("\nFound a \"!=\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;	
+			
+		case EQUAL:
+                        printf("\nFound a \"=\" on line %d of file \"%s\".\n", tokenline, filename);
+                        break;
+                        
+                case QUESTMARK:
+                        printf("\nFound a \";\" on line %d of file \"%s\".\n", tokenline, filename);
+                        break;
+                        
+                case COMMA:
+                        printf("\nFound a \",\" on line %d of file \"%s\".\n", tokenline, filename);
+                        break;
+                        
+                case LEFTPAR:
+                        printf("\nFound a \"(\" on line %d of file \"%s\".\n", tokenline, filename);
+                        break;
+                        
+                case RIGHTPAR:
+                        printf("\nFound a \")\" on line %d of file \"%s\".\n", tokenline, filename);
+                        break;
+                        
+		case LBRAC:
+			printf("Found a \"[\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case RBRAC:
+			printf("Found a \"]\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case LCURLY:
+			printf("\nFound a \"{\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case RCURLY:
+			printf("\nFound a \"}\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case LCOMM:
+			printf("\nFound a \"/*\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case RCOMM:
+			printf("\nFound a \"*/\" on line %d of file \"%s\".\n", tokenline, filename);
+			break;
+			
+		case T_ID:
+			printf("\nFound an ID: \"%s\" on line %d of file \"%s\".\n", yytext, tokenline, filename);
+			break;
+			
+		case T_NUM:
+			printf("\nFound a NUM: \"%s\" on line %d of file \"%s\".\n", yytext, tokenline, filename);
+			break;
+			
+		case T_Letter:
+			printf("\nFound a Letter: \"%s\" on line %d of file \"%s\".\n", yytext, tokenline, filename);
+			break;
+			
+		case T_Dig:
+			printf("\nFound a Digit: \"%s\" on line %d of file \"%s\".\n", yytext, tokenline, filename);
+			break;
+			
+		case T_white:
+			printf("\nFound whitespace on line %d of file \"%s\".\n", tokenline, filename);
+			break;     
+			
+		case T_Comment:
+		       printf("\nFound Comment on line %d of file \"%s\".\n", tokenline, filename);
+		       break;
+		       
+	       case CHAR:
+		       printf("\nFound Char on line %d of file \"%s\".\n", tokenline, filename);
+		       break;
+	};
+}
+
+
+void tokenprocess(int t, int n)
+{
+        PRINTTOKEN(t, n);
+}

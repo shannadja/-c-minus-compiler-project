@@ -1,0 +1,6 @@
+*/ */sd s /*
+/* dasd */
+SE2
+
+if("a"=="b")
+then A=2
