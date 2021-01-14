@@ -1,0 +1,72 @@
+%option noyywrap
+%{
+	
+#include <stdio.h>
+#include <string.h>
+#include "tokens.h"
+#include "ergasia2.tab.h"
+
+
+	
+%}
+
+
+ID     {Letter}({Letter}|{Dig}|"_")*
+NUM    {Dig}{Dig}*
+Letter [A-Za-z]
+Dig    [0-9]                       
+W	[ \t\n]
+
+
+%%
+"if"           { return IF; }
+"else"		{ return ELSE;  }
+"int"		{ return INT;   }
+"char"          { return CHAR;   }
+"return" 	{ return RETURN;}
+"void"		{ return VOID;  }
+"while"        { return WHILE;}
+"+"		{ return yytext[0];}
+"-"		{ return yytext[0]; }
+"*"		{ return yytext[0];}
+"/"		{ return yytext[0];}
+">"		{ return yytext[0];}
+">="		{ return GREATQ;}
+"<"		{ return SMALL;}
+"<="		{ return SMALLQ;}
+"=="		{ return EQUALITY;}
+"!="		{ return NOTEQ;  }
+"="		{ return yytext[0]; }
+";"		{ return yytext[0]; }
+","		{ return yytext[0];}
+"("		{ return yytext[0];}
+")"		{ return yytext[0];}
+"["		{ return yytext[0]; }
+"]"		{ return yytext[0]; }
+"{"		{ return yytext[0];}
+"}"		{ return yytext[0];}
+
+
+{ID}		{return ID ;  }  
+{NUM}		{return  NUMBER;} 
+
+ "/*"(.|\n)*"*/"	{return  Comment;} 
+
+		
+%%
+
+
+
+int main(int argc, char *argv[])
+ {
+	
+       
+   yyin = fopen(argv[1], "r");
+  yyparse();
+  fclose(yyin);
+  return 0;
+              
+	
+        yylex();
+}
+

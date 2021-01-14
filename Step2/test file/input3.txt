@@ -1,0 +1,10 @@
+int main(void)
+{
+int i;
+j=3;
+while(j<=0)
+{
+i= i + 12;
+j= j + 13;
+}
+}
