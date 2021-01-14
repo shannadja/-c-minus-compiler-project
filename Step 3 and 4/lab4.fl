@@ -1,0 +1,48 @@
+/*	   	
+ *	FLEX FILE 
+ */
+
+%{
+	/* Definitions and statements */
+	#include "lab4.tab.h"
+	//extern YYSTYPE yylval;
+	YYSTYPE yylval;
+	int lineNum = 1;
+%}
+
+ID     	{letter}{letter}*
+NUM    	{digit}{digit}*
+letter 	[a-zA-Z]
+digit  	[0-9]
+
+%option noyywrap
+%option yylineno
+
+%%
+
+if                  		{return IF;}
+else                		{return ELSE;}
+int                 		{return INT;}
+return              		{return RETURN;}
+void                		{return VOID;}
+while               		{return WHILE;}
+[=\-+*%/&|(){}><\;,\[\]] 	{return (*yytext);}
+"<="                		{return LE;}
+">="                		{return GE;}
+"!="                		{return NE;}
+"=="                		{return EQ;}
+[0-9]+              		{
+								yylval.value=atoi((const char *)yytext);
+								return NUM; 
+							}
+[a-zA-Z][0-9a-zA-Z]* 		{
+								yylval.string=strdup(yytext);
+								return ID;
+							}
+\"([^\\\"]|\\.)*\" 			{
+								yylval.string=strdup(yytext);
+								return STRINGTEXT;
+							}
+[ \t]             
+\n                  {lineNum++;}
+%%
